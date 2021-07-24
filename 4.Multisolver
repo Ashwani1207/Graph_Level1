@@ -1,0 +1,120 @@
+#include <bits/stdc++.h>
+using namespace std;
+typedef pair<int,string> pi;
+struct edge{
+    int nde;
+    int nbr;
+    int wt;
+    edge(int nde,int nbr,int wt){
+        this->nde=nde;
+        this->nbr=nbr;
+        this->wt=wt;
+    }
+};
+
+vector<bool> visited(1000,false);
+static string maxpathc;
+static string minpathc;
+static string ceilpathsumc;
+static string floorpathc;
+
+
+static int maxpath=INT_MIN;
+static int minpath=INT_MAX;
+static int ceilpathsum=INT_MAX;
+static int floorpath=INT_MIN;
+static string klargestpath;
+static int klargest;
+static priority_queue<pi,vector<pi>,greater<pi>> minheap;
+void allpath(vector<vector<edge*>> &graph,int src,int des,string psf,int totalsum,int criteria,int k){
+    if(src==des){
+    //cout<<psf<<sumsofar<<endl;
+  
+    
+    
+    if(totalsum>maxpath){
+    maxpath=totalsum;
+    maxpathc=psf;
+    }
+    if(totalsum<minpath){
+    minpath=totalsum;
+    minpathc=psf;
+    }
+    if(totalsum>criteria&&totalsum<ceilpathsum)
+    {
+        ceilpathsum=totalsum;
+        ceilpathsumc=psf;
+        
+    }
+    if(totalsum<criteria&&totalsum>floorpath){
+    floorpath=totalsum;
+    floorpathc=psf;
+    }
+      
+    minheap.push({totalsum,psf});
+    if(minheap.size()>k)
+    minheap.pop();
+  
+    return;
+    }
+    visited[src]=true;
+    for(edge* Edge:graph[src]){
+        
+        int nei=Edge->nbr;
+        if(visited[nei]==false){
+        allpath(graph,nei,des,psf+to_string(nei),totalsum+Edge->wt,criteria,k);
+       
+        }
+    }
+    visited[src]=false;
+    return;
+}
+int main() {
+	// your code goes here
+	int v,e;
+	cin>>v>>e;
+	vector<vector<edge*>> graph(v,vector<edge*>());
+	for(int i=0;i<e;i++){
+	    int v1,v2,wt;
+	    cin>>v1>>v2>>wt;
+	    edge* e1=new edge(v1,v2,wt);
+	    edge* e2=new edge(v2,v1,wt);
+	    graph[v1].push_back(e1);
+	    graph[v2].push_back(e2);
+	    
+	}
+	int src,des,criteria,k;
+	    cin>>src>>des>>criteria>>k;
+	  allpath(graph,src,des,to_string(src),0,criteria,k);
+	  cout<<"Smallest Path = "<<minpathc<<"@"<<minpath<<endl;
+	  cout<<"Largest Path = "<<maxpathc<<"@"<<maxpath<<endl;
+	  
+	  cout<<"Just Larger Path than 30  = "<<ceilpathsumc<<"@"<<ceilpathsum<<endl;
+	  cout<<"Just Smaller Path than 30 = "<<floorpathc<<"@"<<floorpath<<endl;
+	  cout<<k<<"th largest path = "<<minheap.top().second<<"@"<<minheap.top().first<<endl;
+	   
+	return 0;
+}
+
+INPUT : 7
+9
+0 1 10
+1 2 10
+2 3 10
+0 3 40
+3 4 2
+4 5 3
+5 6 3
+4 6 8
+2 5 5
+0
+6
+30
+4
+
+OUTPUT : 
+Smallest Path = 01256@28
+Largest Path = 032546@66
+Just Larger Path than 30  = 012546@36
+Just Smaller Path than 30 = 01256@28
+4th largest path = 03456@48
