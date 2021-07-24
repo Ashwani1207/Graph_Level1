@@ -1,0 +1,64 @@
+#include <bits/stdc++.h>
+using namespace std;
+struct edge{
+   
+    int src;
+    int nbr;
+    int wt;
+    edge(int src,int nbr,int wt){
+        this->src=src;
+        this->nbr=nbr;
+        this->wt=wt;
+    }
+};
+vector<bool> visited(1000,false);
+/*bool allpaths(vector<vector<edge*>> &graph,int src,int des){
+    if(src==des)
+    return true;
+    visited[src]=true;
+    for(edge* Edge:graph[src]){
+        int nei=Edge->nbr;
+        if(visited[nei]==false){
+            bool haspath=allpaths(graph,nei,des);
+            if(haspath)
+            return true;
+        }
+    }
+return false;
+}*/
+bool allpath(vector<vector<edge*>> &graph,int src,int des){
+    if(src==des)
+    return true;
+    visited[src]=true;
+    for(edge* Edge:graph[src]){
+        int edgenbr=Edge->nbr;
+        if(visited[edgenbr]==false){
+            bool haspath=allpath(graph,edgenbr,des);
+            if(haspath)
+            return true;
+        }
+    }
+    return false;
+}
+int main() {
+  // your code goes here
+    int v,e;
+    cin>>v>>e;
+    vector<vector<edge*>> graph(v,vector<edge*>()) ;
+    for(int i=0;i<e;i++){
+        int v1,v2,wt;
+        cin>>v1>>v2>>wt;
+        edge* e1=new edge(v1,v2,wt);
+        edge* e2=new edge(v2,v1,wt);
+        graph[v1].push_back(e1);
+        graph[v2].push_back(e2);
+        
+    }
+    int src,des;
+    cin>>src>>des;
+    if(allpath(graph,src,des))
+    cout<<"true"<<endl;
+    else
+    cout<<"false"<<endl;
+  return 0;
+}
