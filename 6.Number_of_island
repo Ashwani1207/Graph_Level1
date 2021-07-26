@@ -1,0 +1,50 @@
+#include <bits/stdc++.h>
+using namespace std;
+struct edge{
+    int nde;
+    int nbr;
+    int wt;
+    edge(int nde,int nbr,int wt){
+        this->nde=nde;
+        this->nbr=nbr;
+        this->wt=wt;
+    }
+};
+void getislandinfo(vector<vector<int>> &arr,int i,int j,vector<vector<bool>> &visited,int n,int m){
+    if(i<0||i>=n||j<0||j>=m||arr[i][j]==1||visited[i][j]==true)//Base Case smart
+    return;
+    visited[i][j]=true;
+    getislandinfo(arr,i+1,j,visited,n,m);//Call stupid
+    getislandinfo(arr,i,j+1,visited,n,m);
+    getislandinfo(arr,i-1,j,visited,n,m);
+    getislandinfo(arr,i,j-1,visited,n,m);
+}
+int main() {
+ 
+ int n,m;
+ cin>>n>>m;
+ vector<vector<int>> arr(n,vector<int>(m));
+ 
+
+ for(int i=0;i<n;i++){
+     for(int j=0;j<m;j++){
+         cin>>arr[i][j];
+     }
+ }
+ 
+ vector<vector<bool>> visited(n,vector<bool>(m,false));
+ int count=0;
+ for(int i=0;i<n;i++){
+     for(int j=0;j<m;j++){
+         if(arr[i][j]==0&&visited[i][j]==false){
+             getislandinfo(arr,i,j,visited,n,m);
+             
+             count++;
+         }
+     }
+ }
+ cout<<count<<endl;
+  
+     
+  return 0;
+}
