@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+using namespace std;
+struct edge{
+    int nde;
+    int nbr;
+    int wt;
+    edge(int nde,int nbr,int wt){
+        this->nde=nde;
+        this->nbr=nbr;
+        this->wt=wt;
+    }
+};
+
+void allpath(vector<vector<edge*>> &graph,int src,int des,string psf,int org_src,vector<bool> &visited){
+    if(visited.size()==psf.size()){
+        int flag=0;
+        for(edge* ed:graph[src]){
+            if(ed->nbr==org_src){
+                flag=1;
+                cout<<psf<<"*"<<endl;
+                break;
+            }
+        }
+        if(!flag)
+        cout<<psf<<"."<<endl;
+    
+    }
+    visited[src]=true;
+    for(edge* Edge:graph[src]){
+        
+        int nei=Edge->nbr;
+        if(visited[nei]==false){
+        allpath(graph,nei,des,psf+to_string(nei),org_src,visited);
+       
+        }
+    }
+    visited[src]=false;
+   
+}
+int main() {
+	// your code goes here
+	int v,e;
+	cin>>v>>e;
+	vector<vector<edge*>> graph(v,vector<edge*>());
+	for(int i=0;i<e;i++){
+	    int v1,v2,wt;
+	    cin>>v1>>v2>>wt;
+	    edge* e1=new edge(v1,v2,wt);
+	    edge* e2=new edge(v2,v1,wt);
+	    graph[v1].push_back(e1);
+	    graph[v2].push_back(e2);
+	    
+	}
+	int src,des;
+	    cin>>src;
+	    int org_src=src;
+	    vector<bool> visited(graph.size(),false);
+	  allpath(graph,src,des,to_string(src),org_src,visited);
+	   
+	return 0;
+}
