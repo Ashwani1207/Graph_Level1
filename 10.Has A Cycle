@@ -1,0 +1,65 @@
+#include <bits/stdc++.h>
+using namespace std;
+struct edge{
+    int nde;
+    int nbr;
+    int wt;
+    edge(int nde,int nbr,int wt){
+        this->nde=nde;
+        this->nbr=nbr;
+        this->wt=wt;
+    }
+};
+
+bool hascycle(vector<vector<edge*>> &graph,int src,string psf,vector<bool> &visited){
+    queue<pair<int,string>> bfsqueue;
+    bfsqueue.push({src,psf});
+    while(bfsqueue.size()>0){
+        auto t=bfsqueue.front();
+        bfsqueue.pop();
+        int val=t.first;
+        if(visited[val]==true){
+       return true;
+        }
+        else{
+            visited[val]=true; 
+           // cout<<val<<"@"<<t.second<<endl;
+            for(edge* ed:graph[val]){
+                if(visited[ed->nbr]==false){
+                    bfsqueue.push({ed->nbr,t.second+to_string(ed->nbr)});
+                }
+            }
+        }
+    }
+   return false;     
+    
+}
+int main() {
+	// your code goes here
+	int v,e;
+	cin>>v>>e;
+	vector<vector<edge*>> graph(v,vector<edge*>());
+	for(int i=0;i<e;i++){
+	    int v1,v2,wt;
+	    cin>>v1>>v2>>wt;
+	    edge* e1=new edge(v1,v2,wt);
+	    edge* e2=new edge(v2,v1,wt);
+	    graph[v1].push_back(e1);
+	    graph[v2].push_back(e2);
+	  
+	}
+	 bool cycle;
+	 vector<bool> visited(v,false);
+	for(int i=0;i<v;i++){ 
+	   if(visited[i]==false)
+	   cycle=hascycle(graph,i,to_string(i),visited);
+	    if(cycle){
+	    cout<<"true"<<endl;
+	 return 0;
+	    }
+	    
+	}
+	    
+	    cout<<"false"<<endl;
+	return 0;
+}
